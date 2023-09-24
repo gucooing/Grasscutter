@@ -1037,8 +1037,7 @@ public class SceneScriptManager {
         }
 
         // Spawn mob
-        EntityMonster entity = new EntityMonster(getScene(), data, monster.pos, level);
-        entity.getRotation().set(monster.rot);
+        EntityMonster entity = new EntityMonster(getScene(), data, monster.pos, monster.rot, level);
         entity.setGroupId(groupId);
         entity.setBlockId(blockId);
         entity.setConfigId(monster.config_id);
@@ -1180,7 +1179,7 @@ public class SceneScriptManager {
 
         Grasscutter.getLogger()
                 .warn("trying to cancel a timer that's not active {} {}", groupID, source);
-        return 1;
+        return 0;
     }
 
     // todo use killed monsters instead of spawned entites for check?

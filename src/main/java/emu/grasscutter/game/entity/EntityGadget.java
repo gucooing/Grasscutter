@@ -6,8 +6,7 @@ import emu.grasscutter.data.binout.config.ConfigEntityGadget;
 import emu.grasscutter.data.binout.config.fields.ConfigAbilityData;
 import emu.grasscutter.data.excels.GadgetData;
 import emu.grasscutter.game.entity.gadget.*;
-import emu.grasscutter.game.entity.gadget.platform.BaseRoute;
-import emu.grasscutter.game.entity.gadget.platform.ConfigRoute;
+import emu.grasscutter.game.entity.gadget.platform.*;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.*;
 import emu.grasscutter.game.world.*;
@@ -257,6 +256,9 @@ public class EntityGadget extends EntityBaseGadget {
             var route = this.getScene().getSceneRouteById(configRoute.getRouteId());
             if (route != null) {
                 var points = route.getPoints();
+                if (configRoute.getStartIndex() == points.length - 1) {
+                    configRoute.setStartIndex(0);
+                }
                 val currIndex = configRoute.getStartIndex();
 
                 Position prevpos;
@@ -302,6 +304,9 @@ public class EntityGadget extends EntityBaseGadget {
                                                         }
                                                         configRoute.setStartIndex(I);
                                                         this.position.set(points[I].getPos());
+                                                        if (I == points.length - 1) {
+                                                            configRoute.setStarted(false);
+                                                        }
                                                     },
                                                     (int) time));
                 }

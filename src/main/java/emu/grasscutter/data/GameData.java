@@ -4,33 +4,54 @@ import emu.grasscutter.Grasscutter;
 import emu.grasscutter.data.binout.*;
 import emu.grasscutter.data.binout.config.*;
 import emu.grasscutter.data.binout.routes.Route;
-import emu.grasscutter.data.custom.*;
+import emu.grasscutter.data.custom.TrialAvatarActivityCustomData;
+import emu.grasscutter.data.custom.TrialAvatarCustomData;
 import emu.grasscutter.data.excels.*;
-import emu.grasscutter.data.excels.achievement.*;
-import emu.grasscutter.data.excels.activity.*;
+import emu.grasscutter.data.excels.achievement.AchievementData;
+import emu.grasscutter.data.excels.achievement.AchievementGoalData;
+import emu.grasscutter.data.excels.activity.ActivityCondExcelConfigData;
+import emu.grasscutter.data.excels.activity.ActivityData;
+import emu.grasscutter.data.excels.activity.ActivityShopData;
+import emu.grasscutter.data.excels.activity.ActivityWatcherData;
 import emu.grasscutter.data.excels.avatar.*;
 import emu.grasscutter.data.excels.codex.*;
 import emu.grasscutter.data.excels.dungeon.*;
-import emu.grasscutter.data.excels.giving.*;
-import emu.grasscutter.data.excels.monster.*;
-import emu.grasscutter.data.excels.quest.*;
-import emu.grasscutter.data.excels.reliquary.*;
-import emu.grasscutter.data.excels.tower.*;
+import emu.grasscutter.data.excels.giving.GivingData;
+import emu.grasscutter.data.excels.giving.GivingGroupData;
+import emu.grasscutter.data.excels.monster.MonsterCurveData;
+import emu.grasscutter.data.excels.monster.MonsterData;
+import emu.grasscutter.data.excels.monster.MonsterDescribeData;
+import emu.grasscutter.data.excels.monster.MonsterSpecialNameData;
+import emu.grasscutter.data.excels.quest.QuestData;
+import emu.grasscutter.data.excels.quest.QuestGlobalVarData;
+import emu.grasscutter.data.excels.reliquary.ReliquaryAffixData;
+import emu.grasscutter.data.excels.reliquary.ReliquaryLevelData;
+import emu.grasscutter.data.excels.reliquary.ReliquaryMainPropData;
+import emu.grasscutter.data.excels.reliquary.ReliquarySetData;
+import emu.grasscutter.data.excels.scene.*;
+import emu.grasscutter.data.excels.tower.TowerFloorData;
+import emu.grasscutter.data.excels.tower.TowerLevelData;
+import emu.grasscutter.data.excels.tower.TowerScheduleData;
 import emu.grasscutter.data.excels.trial.*;
-import emu.grasscutter.data.excels.weapon.*;
-import emu.grasscutter.data.excels.world.*;
+import emu.grasscutter.data.excels.weapon.WeaponCurveData;
+import emu.grasscutter.data.excels.weapon.WeaponLevelData;
+import emu.grasscutter.data.excels.weapon.WeaponPromoteData;
+import emu.grasscutter.data.excels.world.WeatherData;
+import emu.grasscutter.data.excels.world.WorldAreaData;
+import emu.grasscutter.data.excels.world.WorldLevelData;
 import emu.grasscutter.data.server.*;
 import emu.grasscutter.game.dungeons.DungeonDropEntry;
-import emu.grasscutter.game.quest.*;
+import emu.grasscutter.game.quest.QuestEncryptionKey;
+import emu.grasscutter.game.quest.RewindData;
+import emu.grasscutter.game.quest.TeleportData;
 import emu.grasscutter.game.quest.enums.QuestCond;
 import emu.grasscutter.game.world.GroupReplacementData;
 import emu.grasscutter.utils.Utils;
 import it.unimi.dsi.fastutil.ints.*;
-import lombok.*;
-
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
+import javax.annotation.Nullable;
+import lombok.*;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public final class GameData {
@@ -141,8 +162,7 @@ public final class GameData {
             new Int2ObjectOpenHashMap<>();
 
     @Getter
-    private static final Int2ObjectMap<BargainData> bargainDataMap
-        = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<BargainData> bargainDataMap = new Int2ObjectOpenHashMap<>();
 
     @Getter
     private static final Int2ObjectMap<BattlePassMissionData> battlePassMissionDataMap =
@@ -192,6 +212,14 @@ public final class GameData {
 
     @Getter
     private static final Int2ObjectMap<CookRecipeData> cookRecipeDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<CoopChapterData> coopChapterDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<CoopPointData> coopPointDataMap =
             new Int2ObjectOpenHashMap<>();
 
     @Getter
@@ -249,7 +277,8 @@ public final class GameData {
     private static final Int2ObjectMap<GivingData> givingDataMap = new Int2ObjectOpenHashMap<>();
 
     @Getter
-    private static final Int2ObjectMap<GivingGroupData> givingGroupDataMap = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<GivingGroupData> givingGroupDataMap =
+            new Int2ObjectOpenHashMap<>();
 
     @Getter
     @Deprecated // This is to prevent people from using this map. This is for the resource loader
@@ -258,7 +287,15 @@ public final class GameData {
             new Int2ObjectOpenHashMap<>();
 
     @Getter
+    private static final Int2ObjectMap<HomeWorldAnimalData> homeWorldAnimalDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
     private static final Int2ObjectMap<HomeWorldBgmData> homeWorldBgmDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<HomeWorldEventData> homeWorldEventDataMap =
             new Int2ObjectOpenHashMap<>();
 
     @Getter
@@ -266,10 +303,25 @@ public final class GameData {
             new Int2ObjectOpenHashMap<>();
 
     @Getter
+    private static final Int2ObjectMap<HomeWorldNPCData> homeWorldNPCDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
     private static final Int2ObjectMap<InvestigationMonsterData> investigationMonsterDataMap =
             new Int2ObjectOpenHashMap<>();
 
     @Getter private static final Int2ObjectMap<ItemData> itemDataMap = new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<MapLayerData> mapLayerDataMap = new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<MapLayerFloorData> mapLayerFloorDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<MapLayerGroupData> mapLayerGroupDataMap =
+            new Int2ObjectOpenHashMap<>();
 
     @Getter
     private static final Int2ObjectMap<MonsterCurveData> monsterCurveDataMap =
@@ -336,6 +388,10 @@ public final class GameData {
 
     @Getter
     private static final Int2ObjectMap<SceneData> sceneDataMap = new Int2ObjectLinkedOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<SceneTagData> sceneTagDataMap =
+            new Int2ObjectLinkedOpenHashMap<>();
 
     @Getter
     private static final Int2ObjectMap<TalkConfigData> talkConfigDataMap =

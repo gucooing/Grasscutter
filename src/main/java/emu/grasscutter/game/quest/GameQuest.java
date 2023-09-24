@@ -12,13 +12,13 @@ import emu.grasscutter.game.quest.enums.*;
 import emu.grasscutter.net.proto.ChapterStateOuterClass;
 import emu.grasscutter.net.proto.QuestOuterClass.Quest;
 import emu.grasscutter.scripts.data.SceneGroup;
+import emu.grasscutter.server.event.player.PlayerCompleteQuestEvent;
 import emu.grasscutter.server.packet.send.*;
 import emu.grasscutter.utils.Utils;
 import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
-import lombok.*;
-
-import javax.script.Bindings;
 import java.util.*;
+import javax.script.Bindings;
+import lombok.*;
 
 @Entity
 public class GameQuest {
@@ -158,6 +158,13 @@ public class GameQuest {
     public boolean clearProgress(boolean notifyDelete) {
         // TODO improve
         var oldState = state;
+        if (questData.getAcceptCond() != null && questData.getAcceptCond().size() != 0) {
+            this.getMainQuest()
+                    .getQuestManager()
+                    .getAcceptProgressLists()
+                    .put(this.getSubQuestId(), new int[questData.getAcceptCond().size()]);
+        }
+
         if (questData.getFinishCond() != null && questData.getFinishCond().size() != 0) {
             for (var condition : questData.getFinishCond()) {
                 if (condition.getType() == QuestContent.QUEST_CONTENT_LUA_NOTIFY) {
@@ -196,6 +203,10 @@ public class GameQuest {
     }
 
     public void finish() {
+        // Call PlayerCompleteQuestEvent.
+        var event = new PlayerCompleteQuestEvent(this.getOwner(), this);
+        if (!event.call()) return;
+
         // Check if the quest has been finished.
         synchronized (this) {
             if (this.state == QuestState.QUEST_STATE_FINISHED) {

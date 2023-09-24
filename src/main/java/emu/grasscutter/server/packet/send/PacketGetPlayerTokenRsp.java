@@ -1,8 +1,7 @@
 package emu.grasscutter.server.packet.send;
 
 import com.google.protobuf.ByteString;
-import emu.grasscutter.net.packet.BasePacket;
-import emu.grasscutter.net.packet.PacketOpcodes;
+import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.GetPlayerTokenRspOuterClass.GetPlayerTokenRsp;
 import emu.grasscutter.server.game.GameSession;
 import emu.grasscutter.utils.Crypto;
@@ -21,13 +20,13 @@ public class PacketGetPlayerTokenRsp extends BasePacket {
                         .setAccountType(1)
                         .setIsProficientPlayer(
                                 session.getPlayer().getAvatars().getAvatarCount() > 0) // Not sure where this goes
-                        .setSecretKeySeed(Crypto.ENCRYPT_SEED)
+                        .setSecretKeySeed(session.getEncryptSeed())
                         .setSecurityCmdBuffer(ByteString.copyFrom(Crypto.ENCRYPT_SEED_BUFFER))
                         .setPlatformType(3)
                         .setChannelId(1)
                         .setCountryCode("US")
                         .setClientVersionRandomKey("c25-314dd05b0b5f")
-                        .setEMFDHANIAHH(3) // setRegPlatform
+                        .setRegPlatform(3)
                         .setClientIpStr(session.getAddress().getAddress().getHostAddress())
                         .build();
 
@@ -46,7 +45,7 @@ public class PacketGetPlayerTokenRsp extends BasePacket {
                         .setRetcode(retcode)
                         .setMsg(msg)
                         .setBlackUidEndTime(blackEndTime)
-                        .setEMFDHANIAHH(3) // setRegPlatform
+                        .setRegPlatform(3)
                         .setCountryCode("US")
                         .setClientIpStr(session.getAddress().getAddress().getHostAddress())
                         .build();
@@ -67,13 +66,13 @@ public class PacketGetPlayerTokenRsp extends BasePacket {
                         .setAccountType(1)
                         .setIsProficientPlayer(
                                 session.getPlayer().getAvatars().getAvatarCount() > 0) // Not sure where this goes
-                        .setSecretKeySeed(Crypto.ENCRYPT_SEED)
+                        .setSecretKeySeed(session.getEncryptSeed())
                         .setSecurityCmdBuffer(ByteString.copyFrom(Crypto.ENCRYPT_SEED_BUFFER))
                         .setPlatformType(3)
                         .setChannelId(1)
                         .setCountryCode("US")
                         .setClientVersionRandomKey("c25-314dd05b0b5f")
-                        .setEMFDHANIAHH(3) // setRegPlatform
+                        .setRegPlatform(3)
                         .setClientIpStr(session.getAddress().getAddress().getHostAddress())
                         .setServerRandKey(encryptedSeed)
                         .setSign(encryptedSeedSign)
